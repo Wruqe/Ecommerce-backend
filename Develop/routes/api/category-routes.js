@@ -5,11 +5,11 @@ const { Category, Product } = require('../../models');
 
 router.get('/', async (req, res) => {
   try {
-    const categoryRoutes = await Category.finaAll({
+    const categoryRoutes = await Category.findAll({
       include: [{model: Product}],
     });
     res.status(200).json(categoryRoutes)
-  } catch (error) {
+  } catch (err) {
     res.status(500).json(err)
   }
   // find all categories
@@ -26,7 +26,7 @@ router.get('/:id', async (req, res) => {
       return
     }
     res.status(200).json(categoryRoutes)
-  } catch (error) {
+  } catch (err) {
     res.status(500).json(err)
   }
   // find one category by its `id` value
@@ -37,7 +37,7 @@ router.post('/', async (req, res) => {
   try {
     const categoryRoutes = await Category.create(req.body);
     res.status(200).json(categoryRoutes)
-  } catch (error) {
+  } catch (err) {
     res.status(500).json(err)
   }
   // create a new category
@@ -47,13 +47,14 @@ router.put('/:id', async (req, res) => {
   try {
     const categoryRoutes = await Category.update(req.body, {
       where: {
-        id: req.body.id,
+        id: req.params.id,
       },
     })
     if(!categoryRoutes) {
-      res.status(404).json({message: 'no categories with this name!'})
+     return res.status(404).json({message: 'no categories with this name!'})
     }
-  } catch (error) {
+    res.status(200).json(categoryRoutes)
+  } catch (err) {
     res.status(500).json(err)
   }
   // update a category by its `id` value
